@@ -25,4 +25,9 @@ public class CategoriaService {
                 .orElseThrow(() -> new NotFoundException("Categoria não encontrada"));
         repository.delete(categoria);
     }
+
+    public Categoria getById(Long id){
+        return repository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Categoria não encontrada"));
+    }
 }
