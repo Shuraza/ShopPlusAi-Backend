@@ -5,6 +5,9 @@ import com.univille.api.shopplusai.domain.categoria.CategoriaService;
 import com.univille.api.shopplusai.domain.categoria.dto.CreateCategoriaRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -33,6 +36,12 @@ public class CategoriaController {
     public ResponseEntity<Categoria> getbyId(@PathVariable Long id){
         var categoria = service.getById(id);
         return ResponseEntity.ok().body(categoria);
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<Categoria>> getAll(@PageableDefault Pageable paginacao){
+        var page = service.getAll(paginacao);
+        return ResponseEntity.ok().body(page);
     }
 
 }
