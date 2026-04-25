@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
+@RequestMapping("/usuario")
 @RequiredArgsConstructor
 public class UsuarioController {
 
