@@ -1,0 +1,9 @@
+package com.univille.api.shopplusai.domain.usuario;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+public interface UsuarioRepository extends JpaRepository<Long, Usuario> {
+    Optional<Usuario> findByEmail(String email);
+}
