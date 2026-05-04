@@ -37,5 +37,20 @@ public class AvaliacaoService {
         return new AvaliacaoResponse(avaliacao);
     }
 
+    @Transactional
+    public void delete(Long id){
+        var avaliacao = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Avaliacao não encontrada"));
+
+        repository.delete(avaliacao);
+    }
+
+    public AvaliacaoResponse getById(Long id){
+        var avaliacao = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Avaliacao não encontrada"));
+
+        return new AvaliacaoResponse(avaliacao);
+    }
+
 
 }
