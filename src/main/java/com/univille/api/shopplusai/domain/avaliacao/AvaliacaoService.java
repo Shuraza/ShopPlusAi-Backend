@@ -6,6 +6,8 @@ import com.univille.api.shopplusai.domain.produto.ProdutoRepository;
 import com.univille.api.shopplusai.domain.usuario.UsuarioRepository;
 import com.univille.api.shopplusai.infra.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,5 +54,7 @@ public class AvaliacaoService {
         return new AvaliacaoResponse(avaliacao);
     }
 
-
+    public Page<AvaliacaoResponse> getAll(Pageable paginacao){
+        return repository.findAll(paginacao).map(AvaliacaoResponse::new);
+    }
 }
