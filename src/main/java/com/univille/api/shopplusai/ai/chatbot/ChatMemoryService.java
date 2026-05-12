@@ -40,4 +40,19 @@ public class ChatMemoryService {
 
         repository.save(message);
     }
+
+    public void saveSystemMessage(
+            String conversationId,
+            String mensagem
+    ){
+
+        ChatMessage message = new ChatMessage();
+
+        message.setConversationId(conversationId);
+        message.setRole(MessageRole.SYSTEM);
+        message.setContent(mensagem);
+        message.setCreatedAt(LocalDateTime.now());
+
+        repository.save(message);
+    }
 }

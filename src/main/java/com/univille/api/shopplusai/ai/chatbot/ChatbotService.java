@@ -19,6 +19,10 @@ public class ChatbotService {
 
     public ChatResponse chat(String pergunta, String conversationId){
 
+        var avaliacoes = avaliacaoService.getAllAvaliacoes();
+        var produtos = produtoService.getAllProdutos();
+
+
 
 
     }
