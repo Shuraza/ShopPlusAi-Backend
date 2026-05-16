@@ -30,7 +30,6 @@ public class ChatbotService {
         if(conversationId == null){
             UUID uuid = UUID.randomUUID();
             conversationId = uuid.toString();
-
         }
 
         var avaliacoes = avaliacaoService.getAllAvaliacoes();
@@ -38,15 +37,12 @@ public class ChatbotService {
 
         var systemPrompt = promptBuilder.systemPrompt();
         var userPrompt = promptBuilder.contextPrompt(pergunta, getAllById(conversationId), avaliacoes, produtos);
-
         memoryService.saveUserMessage(conversationId, userPrompt);
 
         var iaResponse = geminiClient.chat(systemPrompt, userPrompt);
-
         memoryService.saveAssistantMessage(conversationId, iaResponse);
 
         return new ChatResponse(iaResponse, conversationId);
-
     }
 
     public List<ChatMessage> getAllById(String conversationId){
