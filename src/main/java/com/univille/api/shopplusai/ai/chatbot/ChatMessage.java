@@ -18,8 +18,9 @@ public class ChatMessage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String conversationId;
+    @ManyToOne
+    @JoinColumn(name = "id_conversation")
+    private ChatConversation conversation;
 
     @Enumerated(EnumType.STRING)
     private MessageRole role;
