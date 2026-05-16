@@ -32,7 +32,7 @@ public class AvaliacaoService {
 
         var avaliacao = new Avaliacao();
         avaliacao.setComentario(dados.comentario());
-        avaliacao.setData(LocalDate.now());
+        avaliacao.setData( (dados.data() == null) ? LocalDate.now() : dados.data() );
         avaliacao.setUsuario(usuario);
         avaliacao.setProduto(produto);
 

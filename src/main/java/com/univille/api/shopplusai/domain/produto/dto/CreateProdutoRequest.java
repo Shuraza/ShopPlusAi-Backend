@@ -12,6 +12,6 @@ public record CreateProdutoRequest (
         Long idCategoria,
 
         @NotNull
-        double preco)
+        Double preco)
 {
 }

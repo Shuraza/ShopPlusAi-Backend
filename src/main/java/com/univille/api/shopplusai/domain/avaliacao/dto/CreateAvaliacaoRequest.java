@@ -14,7 +14,9 @@ public record CreateAvaliacaoRequest(
         Long idProduto,
 
         @NotBlank
-        String comentario
+        String comentario,
+
+        LocalDate data
 
 ) {
 }
