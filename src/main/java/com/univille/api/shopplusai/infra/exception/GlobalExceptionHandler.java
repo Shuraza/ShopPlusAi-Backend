@@ -3,6 +3,7 @@ package com.univille.api.shopplusai.infra.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -40,5 +41,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleMissingServletRequestParameterException(MissingServletRequestParameterException e){
         var resposeError = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage(), null);
         return ResponseEntity.badRequest().body(resposeError);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e){
+        var responseError = new ErrorResponse(HttpStatus.METHOD_NOT_ALLOWED.value(), e.getMessage(), null);
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED.value()).body(responseError);
     }
 }

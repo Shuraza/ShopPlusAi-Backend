@@ -38,6 +38,12 @@ public class ChatController {
         return ResponseEntity.ok().body(messages);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteConversation(@PathVariable String id){
+        service.removeConversation(id);
+        return ResponseEntity.noContent().build();
+    }
+
 
 
 }

@@ -11,6 +11,7 @@ import com.univille.api.shopplusai.infra.client.gemini.GeminiClient;
 import com.univille.api.shopplusai.infra.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -28,6 +29,7 @@ public class ChatbotService {
     private final ChatConversationRepository conversationRepository;
     private final UsuarioRepository usuarioRepository;
 
+    @Transactional
     public ChatResponse chat(ChatRequest request){
 
         ChatConversation conversation;
@@ -80,6 +82,16 @@ public class ChatbotService {
         return conversations.stream()
                 .map(ConversationsUserResponse::new)
                 .toList();
+    }
+
+    @Transactional
+    public void removeConversation(String id){
+
+        var conversation = conversationRepository.findById(UUID.fromString(id))
+                .orElseThrow(() -> new NotFoundException("Conversa com id informado não encontrada"));
+
+        repository.deleteAllByConversation(conversation);
+        conversationRepository.delete(conversation);
     }
 
 }
