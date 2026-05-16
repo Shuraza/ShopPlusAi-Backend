@@ -1,7 +1,6 @@
 CREATE TABLE chat_conversations (
     id CHAR(36),
     id_usuario BIGINT NOT NULL,
-    titulo VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
     CONSTRAINT fk_chat_conversations_usuario
