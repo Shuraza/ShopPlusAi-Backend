@@ -1,5 +1,6 @@
 package com.univille.api.shopplusai.ai.chatbot;
 
+import com.univille.api.shopplusai.ai.chatbot.dto.ChatRequest;
 import com.univille.api.shopplusai.ai.chatbot.dto.ChatResponse;
 import com.univille.api.shopplusai.domain.avaliacao.AvaliacaoService;
 import com.univille.api.shopplusai.domain.produto.ProdutoService;
@@ -21,7 +22,10 @@ public class ChatbotService {
     private final GeminiClient geminiClient;
     private final ChatMessageRepository repository;
 
-    public ChatResponse chat(String pergunta, String conversationId){
+    public ChatResponse chat(ChatRequest request){
+
+        String conversationId = request.conversationId();
+        String pergunta = request.question();
 
         if(conversationId == null){
             UUID uuid = UUID.randomUUID();
@@ -41,7 +45,7 @@ public class ChatbotService {
 
         memoryService.saveAssistantMessage(conversationId, iaResponse);
 
-        return new ChatResponse();
+        return new ChatResponse(iaResponse, conversationId);
 
     }
 
