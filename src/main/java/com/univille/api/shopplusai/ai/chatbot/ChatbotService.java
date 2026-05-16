@@ -4,7 +4,10 @@ import com.univille.api.shopplusai.ai.chatbot.dto.ChatRequest;
 import com.univille.api.shopplusai.ai.chatbot.dto.ChatResponse;
 import com.univille.api.shopplusai.domain.avaliacao.AvaliacaoService;
 import com.univille.api.shopplusai.domain.produto.ProdutoService;
+import com.univille.api.shopplusai.domain.usuario.Usuario;
+import com.univille.api.shopplusai.domain.usuario.UsuarioRepository;
 import com.univille.api.shopplusai.infra.client.gemini.GeminiClient;
+import com.univille.api.shopplusai.infra.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,32 +24,42 @@ public class ChatbotService {
     private final ChatbotPromptBuilder promptBuilder;
     private final GeminiClient geminiClient;
     private final ChatMessageRepository repository;
+    private final ChatConversationRepository conversationRepository;
+    private final UsuarioRepository usuarioRepository;
 
     public ChatResponse chat(ChatRequest request){
 
-        String conversationId = request.conversationId();
-        String pergunta = request.question();
+        ChatConversation conversation;
+        Usuario usuario = usuarioRepository.findById(request.usuarioId())
+                .orElseThrow(() -> new NotFoundException("Usuario com esse id não encontrado"));
 
-        if(conversationId == null){
-            UUID uuid = UUID.randomUUID();
-            conversationId = uuid.toString();
+        if (request.conversationId() == null){
+            conversation = new ChatConversation();
+            conversation.setUsuario(usuario);
+            conversation = conversationRepository.save(conversation);
+        }else{
+            UUID conversationId = UUID.fromString(request.conversationId());
+            conversation = conversationRepository.findById(conversationId)
+                    .orElseThrow(() -> new NotFoundException("Conversa com esse id não encontrada"));
         }
+
+        String pergunta = request.question();
 
         var avaliacoes = avaliacaoService.getAllAvaliacoes();
         var produtos = produtoService.getAllProdutos();
 
         var systemPrompt = promptBuilder.systemPrompt();
-        var userPrompt = promptBuilder.contextPrompt(pergunta, getAllById(conversationId), avaliacoes, produtos);
-        memoryService.saveUserMessage(conversationId, userPrompt);
+        var userPrompt = promptBuilder.contextPrompt(pergunta, getAllById(conversation), avaliacoes, produtos);
+        memoryService.saveUserMessage(conversation, userPrompt);
 
         var iaResponse = geminiClient.chat(systemPrompt, userPrompt);
-        memoryService.saveAssistantMessage(conversationId, iaResponse);
+        memoryService.saveAssistantMessage(conversation, iaResponse);
 
-        return new ChatResponse(iaResponse, conversationId);
+        return new ChatResponse(conversation.getId(), iaResponse);
     }
 
-    public List<ChatMessage> getAllById(String conversationId){
-        return repository.findAllByConversationId(conversationId);
+    public List<ChatMessage> getAllById(ChatConversation conversation){
+        return repository.findAllByConversation(conversation);
     }
 
 }

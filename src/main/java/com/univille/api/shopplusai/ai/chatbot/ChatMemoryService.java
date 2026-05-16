@@ -12,13 +12,13 @@ public class ChatMemoryService {
     private final ChatMessageRepository repository;
 
     public void saveUserMessage(
-            String conversationId,
+            ChatConversation conversation,
             String mensagem
     ){
 
         ChatMessage message = new ChatMessage();
 
-        message.setConversationId(conversationId);
+        message.setConversation(conversation);
         message.setRole(MessageRole.USER);
         message.setContent(mensagem);
         message.setCreatedAt(LocalDateTime.now());
@@ -27,13 +27,13 @@ public class ChatMemoryService {
     }
 
     public void saveAssistantMessage(
-            String conversationId,
+            ChatConversation conversation,
             String mensagem
     ){
 
         ChatMessage message = new ChatMessage();
 
-        message.setConversationId(conversationId);
+        message.setConversation(conversation);
         message.setRole(MessageRole.ASSISTANT);
         message.setContent(mensagem);
         message.setCreatedAt(LocalDateTime.now());
